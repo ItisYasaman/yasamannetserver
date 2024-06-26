@@ -17,6 +17,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://yasblog.netlify.app",
+      "https://master--yasblog.netlify.app"
     ],
   })
 );
