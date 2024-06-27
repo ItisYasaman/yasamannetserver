@@ -14,7 +14,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://yasblog.netlify.app"],
+    origin: [
+      "http://localhost:3000",
+      "https://yasblog.netlify.app",
+      "https://yasblog.netlify.app/login"
+    ],
   })
 );
 
