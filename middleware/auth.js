@@ -3,7 +3,6 @@
 const jwt = require('jsonwebtoken');
 
 const auth = (req, res, next) => {
-  // Check if there's a token in the header
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (token) {
