@@ -1,6 +1,7 @@
 
 
 # Node.js
+all
 node_modules/
 npm-debug.log*
 yarn-debug.log*
