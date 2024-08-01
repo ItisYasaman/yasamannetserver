@@ -33,7 +33,7 @@ mongoose
 
 app.use("/auth", authRoutes);
 app.use("/posts", postRoutes);
-app.use('/tags', tagsRouter); // Use the tags router
+app.use('/tags', tagsRouter);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
