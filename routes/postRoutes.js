@@ -1,3 +1,4 @@
+// server/routes/postRoutes.js
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
@@ -30,12 +31,7 @@ router.post('/', auth, async (req, res) => {
 // Get all posts - public access
 router.get('/', async (req, res) => {
   try {
-    let posts;
-    if (req.query.untagged === 'true') {
-      posts = await Post.find({ tags: { $exists: true, $size: 0 } }).sort({ createdAt: -1 });
-    } else {
-      posts = await Post.find().sort({ createdAt: -1 });
-    }
+    const posts = await Post.find().sort({ createdAt: -1 });
     res.json(posts);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
@@ -46,12 +42,7 @@ router.get('/', async (req, res) => {
 router.get('/tag/:tag', async (req, res) => {
   const { tag } = req.params;
   try {
-    let posts;
-    if (tag === 'untagged') {
-      posts = await Post.find({ tags: { $exists: true, $size: 0 } }).sort({ createdAt: -1 });
-    } else {
-      posts = await Post.find({ tags: tag }).sort({ createdAt: -1 });
-    }
+    const posts = await Post.find({ tags: tag }).sort({ createdAt: -1 });
     res.json(posts);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
