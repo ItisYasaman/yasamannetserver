@@ -5,7 +5,7 @@ const Post = require('../models/Post');
 
 // Add a new post
 router.post('/', auth, async (req, res) => {
-  const { title, content, imageUrl, tags } = req.body; // Include tags
+  const { title, content, imageUrl, tags } = req.body;
 
   if (!tags || tags.length === 0) {
     return res.status(400).json({ message: 'Tags are required' });
@@ -27,15 +27,20 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// Get all posts - public access
+// Get all posts or posts by tag - public access
 router.get('/', async (req, res) => {
+  const { tag, untagged } = req.query;
+
   try {
     let posts;
-    if (req.query.untagged === 'true') {
-      posts = await Post.find({ tags: { $exists: true, $size: 0 } }).sort({ createdAt: -1 });
+    if (untagged === 'true') {
+      posts = await Post.find({ tags: { $size: 0 } }).sort({ createdAt: -1 });
+    } else if (tag) {
+      posts = await Post.find({ tags: tag }).sort({ createdAt: -1 });
     } else {
       posts = await Post.find().sort({ createdAt: -1 });
     }
+
     res.json(posts);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
