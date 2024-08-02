@@ -1,15 +1,15 @@
 // server/routes/postRoutes.js
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const auth = require('../middleware/auth');
-const Post = require('../models/Post');
+const auth = require("../middleware/auth");
+const Post = require("../models/Post");
 
 // Add a new post
-router.post('/', auth, async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const { title, content, imageUrl, tags, date } = req.body; // Include tags
 
   if (!tags || tags.length === 0) {
-    return res.status(400).json({ message: 'Tags are required' });
+    return res.status(400).json({ message: "Tags are required" });
   }
 
   try {
@@ -19,57 +19,57 @@ router.post('/', auth, async (req, res) => {
       imageUrl,
       author: req.user.id,
       tags,
-      date: new Date(date)
+      date: new Date(date).toISOString(),
     });
 
     const post = await newPost.save();
     res.status(201).json(post);
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 // Get all posts - public access
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const posts = await Post.find().sort({ createdAt: -1 });
     res.json(posts);
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 // Get posts by tag - public access
-router.get('/tag/:tag', async (req, res) => {
+router.get("/tag/:tag", async (req, res) => {
   const { tag } = req.params;
   try {
     const posts = await Post.find({ tags: tag }).sort({ createdAt: -1 });
     res.json(posts);
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 // Get a single post by ID - public access
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).json({ message: 'Post not found' });
+    if (!post) return res.status(404).json({ message: "Post not found" });
     res.json(post);
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 // Update a post
-router.put('/:id', auth, async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const { title, content, imageUrl, tags, date } = req.body; // Include tags
 
   try {
     const post = await Post.findById(req.params.id);
 
     if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
+      return res.status(404).json({ message: "Post not found" });
     }
 
     post.title = title || post.title;
@@ -81,21 +81,21 @@ router.put('/:id', auth, async (req, res) => {
     await post.save();
     res.json(post);
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 // Delete a post
-router.delete('/:id', auth, async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).json({ message: 'Post not found' });
+    if (!post) return res.status(404).json({ message: "Post not found" });
 
     await post.deleteOne();
-    res.json({ message: 'Post removed' });
+    res.json({ message: "Post removed" });
   } catch (err) {
-    console.error('Error deleting post:', err);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error deleting post:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
