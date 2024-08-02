@@ -19,7 +19,7 @@ router.post('/', auth, async (req, res) => {
       imageUrl,
       author: req.user.id,
       tags,
-      date: date ? new Date(date) : new Date()
+      date: new Date(date)
     });
 
     const post = await newPost.save();
@@ -76,7 +76,7 @@ router.put('/:id', auth, async (req, res) => {
     post.content = content || post.content;
     post.imageUrl = imageUrl || post.imageUrl;
     post.tags = tags || post.tags;
-    post.date = date ? new Date(date) : post.date;
+    post.date = new Date(date);
 
     await post.save();
     res.json(post);
