@@ -6,7 +6,7 @@ const Post = require('../models/Post');
 
 // Add a new post
 router.post('/', auth, async (req, res) => {
-  const { title, content, imageUrl, tags } = req.body; // Include tags
+  const { title, content, imageUrl, tags, date } = req.body; // Include tags
 
   if (!tags || tags.length === 0) {
     return res.status(400).json({ message: 'Tags are required' });
@@ -19,6 +19,7 @@ router.post('/', auth, async (req, res) => {
       imageUrl,
       author: req.user.id,
       tags,
+      date: date ? new Date(date) : new Date()
     });
 
     const post = await newPost.save();
@@ -62,7 +63,7 @@ router.get('/:id', async (req, res) => {
 
 // Update a post
 router.put('/:id', auth, async (req, res) => {
-  const { title, content, imageUrl, tags } = req.body; // Include tags
+  const { title, content, imageUrl, tags, date } = req.body; // Include tags
 
   try {
     const post = await Post.findById(req.params.id);
@@ -75,6 +76,7 @@ router.put('/:id', auth, async (req, res) => {
     post.content = content || post.content;
     post.imageUrl = imageUrl || post.imageUrl;
     post.tags = tags || post.tags;
+    post.date = date ? new Date(date) : post.date;
 
     await post.save();
     res.json(post);
