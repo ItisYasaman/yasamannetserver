@@ -117,9 +117,15 @@ router.patch("/:id/feature", auth, async (req, res) => {
 // Fetch featured posts
 router.get("/featured", async (req, res) => {
   try {
-    const posts = await Post.find({ featured: true }).limit(5);
+    console.log("Fetching featured posts"); // Logging
+
+    const posts = await Post.find({ featured: true }).limit(10);
+    console.log("Featured posts fetched successfully"); // Logging
+
     res.json(posts);
   } catch (err) {
+    console.error("Error fetching featured posts:", err); // Logging
+
     res.status(500).json({ message: err.message });
   }
 });
