@@ -1,4 +1,3 @@
-// server/routes/postRoutes.js
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
@@ -6,7 +5,7 @@ const Post = require("../models/Post");
 
 // Add a new post
 router.post("/", auth, async (req, res) => {
-  const { title, content, imageUrl, tags, date } = req.body; // Include tags
+  const { title, content, imageUrl, tags, date, featured } = req.body; // Include featured
 
   if (!tags || tags.length === 0) {
     return res.status(400).json({ message: "Tags are required" });
@@ -20,6 +19,7 @@ router.post("/", auth, async (req, res) => {
       author: req.user.id,
       tags,
       date: new Date(date).toISOString(),
+      featured: featured || false,
     });
 
     const post = await newPost.save();
@@ -63,7 +63,7 @@ router.get("/:id", async (req, res) => {
 
 // Update a post
 router.put("/:id", auth, async (req, res) => {
-  const { title, content, imageUrl, tags, date } = req.body; // Include tags
+  const { title, content, imageUrl, tags, date, featured } = req.body; // Include featured
 
   try {
     const post = await Post.findById(req.params.id);
@@ -76,7 +76,8 @@ router.put("/:id", auth, async (req, res) => {
     post.content = content || post.content;
     post.imageUrl = imageUrl || post.imageUrl;
     post.tags = tags || post.tags;
-    post.date = new Date(date);
+    post.date = new Date(date) || post.date;
+    post.featured = featured !== undefined ? featured : post.featured;
 
     await post.save();
     res.json(post);
@@ -96,6 +97,30 @@ router.delete("/:id", auth, async (req, res) => {
   } catch (err) {
     console.error("Error deleting post:", err);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Mark post as featured
+router.patch("/:id/feature", auth, async (req, res) => {
+  try {
+    const post = await Post.findByIdAndUpdate(
+      req.params.id,
+      { featured: true },
+      { new: true }
+    );
+    res.json(post);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// Fetch featured posts
+router.get("/featured", async (req, res) => {
+  try {
+    const posts = await Post.find({ featured: true }).limit(5);
+    res.json(posts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
