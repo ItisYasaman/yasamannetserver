@@ -103,6 +103,7 @@ router.delete("/:id", auth, async (req, res) => {
 // Search posts by title or content
 router.get("/search", async (req, res) => {
   const query = req.query.query;
+
   try {
     const posts = await Post.find({
       $or: [
@@ -113,6 +114,7 @@ router.get("/search", async (req, res) => {
 
     res.json(posts);
   } catch (err) {
+    console.error("Error fetching search results:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
