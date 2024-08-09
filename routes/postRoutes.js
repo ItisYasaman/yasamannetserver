@@ -99,4 +99,24 @@ router.delete("/:id", auth, async (req, res) => {
   }
 });
 
+
+// Search posts by title or content
+router.get("/search", async (req, res) => {
+  const query = req.query.query;
+  try {
+    const posts = await Post.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { content: { $regex: query, $options: "i" } },
+      ],
+    }).sort({ createdAt: -1 });
+
+    res.json(posts);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
 module.exports = router;
