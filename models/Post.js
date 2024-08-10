@@ -8,7 +8,8 @@ const postSchema = new mongoose.Schema({
   author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   createdAt: { type: Date, default: Date.now },
   tags: { type: [String], required: true },
-  date: { type: Date, required: true }
+  date: { type: Date, required: true },
+  addToManual: { type: Boolean, default: false }
 });
 
 const Post = mongoose.model("Post", postSchema);

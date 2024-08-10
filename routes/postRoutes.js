@@ -6,7 +6,7 @@ const Post = require("../models/Post");
 
 // Add a new post
 router.post("/", auth, async (req, res) => {
-  const { title, content, imageUrl, tags, date } = req.body; // Include tags
+  const { title, content, imageUrl, tags, date, addToManual } = req.body; // Include tags
 
   if (!tags || tags.length === 0) {
     return res.status(400).json({ message: "Tags are required" });
@@ -20,6 +20,7 @@ router.post("/", auth, async (req, res) => {
       author: req.user.id,
       tags,
       date: new Date(date).toISOString(),
+      addToManual: addToManual || false
     });
 
     const post = await newPost.save();
@@ -63,7 +64,7 @@ router.get("/:id", async (req, res) => {
 
 // Update a post
 router.put("/:id", auth, async (req, res) => {
-  const { title, content, imageUrl, tags, date } = req.body; // Include tags
+  const { title, content, imageUrl, tags, date, addToManual } = req.body; // Include tags
 
   try {
     const post = await Post.findById(req.params.id);
@@ -77,6 +78,7 @@ router.put("/:id", auth, async (req, res) => {
     post.imageUrl = imageUrl || post.imageUrl;
     post.tags = tags || post.tags;
     post.date = new Date(date);
+    post.addToManual = addToManual !== undefined ? addToManual : post.addToManual;
 
     await post.save();
     res.json(post);
@@ -95,6 +97,16 @@ router.delete("/:id", auth, async (req, res) => {
     res.json({ message: "Post removed" });
   } catch (err) {
     console.error("Error deleting post:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Get highlighted posts - public access
+router.get("/manual", async (req, res) => {
+  try {
+    const manualPosts = await Post.find({ addToManual: true }).sort({ createdAt: -1 });
+    res.json(manualPosts);
+  } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 });
