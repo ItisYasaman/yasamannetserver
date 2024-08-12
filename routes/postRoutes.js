@@ -6,7 +6,7 @@ const Post = require("../models/Post");
 
 // Add a new post
 router.post("/", auth, async (req, res) => {
-  const { title, content, imageUrl, tags, date, addToManual } = req.body; // Include tags
+  const { title, content, imageUrl, tags, date, addToManual } = req.body;
 
   if (!tags || tags.length === 0) {
     return res.status(400).json({ message: "Tags are required" });
@@ -31,7 +31,7 @@ router.post("/", auth, async (req, res) => {
 });
 
 // Get all posts - public access
-router.get("/", async (req, res) => {
+router.get("/home", async (req, res) => {
   try {
     const posts = await Post.find().sort({ createdAt: -1 });
     res.json(posts);
