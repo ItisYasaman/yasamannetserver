@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://choubeh.netlify.app"],
+    origin: ["http://localhost:3000", "https://choubeh.netlify.app", "https://yasaman.net"],
   })
 );
 
