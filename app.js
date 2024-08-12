@@ -15,11 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://yasblog.netlify.app",
-      "https://yasblog.netlify.app/login"
-    ],
+    origin: ["http://localhost:3000", "https://choubeh.netlify.app"],
   })
 );
 
@@ -33,7 +29,7 @@ mongoose
 
 app.use("/auth", authRoutes);
 app.use("/posts", postRoutes);
-app.use('/tags', tagsRouter);
+app.use("/tags", tagsRouter);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
