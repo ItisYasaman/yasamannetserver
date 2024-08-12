@@ -1,4 +1,3 @@
-// server/routes/postRoutes.js
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
@@ -6,7 +5,7 @@ const Post = require("../models/Post");
 
 // Add a new post
 router.post("/", auth, async (req, res) => {
-  const { title, content, imageUrl, tags, date, addToManual } = req.body;
+  const { title, content, imageUrl, tags, date, addToManual } = req.body; // Include tags
 
   if (!tags || tags.length === 0) {
     return res.status(400).json({ message: "Tags are required" });
@@ -20,7 +19,7 @@ router.post("/", auth, async (req, res) => {
       author: req.user.id,
       tags,
       date: new Date(date).toISOString(),
-      addToManual: addToManual || false
+      addToManual: addToManual || false,
     });
 
     const post = await newPost.save();
@@ -31,7 +30,7 @@ router.post("/", auth, async (req, res) => {
 });
 
 // Get all posts - public access
-router.get("/home", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const posts = await Post.find().sort({ createdAt: -1 });
     res.json(posts);
@@ -111,4 +110,4 @@ router.get("/manual", async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = router; // Fixed typo here
