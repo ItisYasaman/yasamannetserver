@@ -1,3 +1,4 @@
+// server/routes/postRoutes.js
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
@@ -19,7 +20,7 @@ router.post("/", auth, async (req, res) => {
       author: req.user.id,
       tags,
       date: new Date(date).toISOString(),
-      addToManual: addToManual || false,
+      addToManual: addToManual || false
     });
 
     const post = await newPost.save();
@@ -110,4 +111,4 @@ router.get("/manual", async (req, res) => {
   }
 });
 
-module.exports = router; // Fixed typo here
+module.exports = router;
